@@ -1,18 +1,18 @@
 const express = require("express");
 
-const app = express();
-// router는 앱 객체를 좀더 작게 만듬. 그래서 간단한 미니앱을 라우터로 만들고, 앱에다가 여러 미니앱을 합쳐서 사용
-const router = express.Router();
+const todosRouter = require("./routes/todos.router.js");
 
-router.get("/", (req, res) => {
-    res.send("Hi!");
-})
-// 앱 객체에 .user()라는 미들웨어 등록
-// - /api로 요청이 들어올때 다음으로 express.json이라는 미들웨어를 거치고
-// 그 다음으로 해당하는 라우터를 찾아가도록 함
-// 또한, express.json이라는 미들웨어는 바디로 들어오는 데이터에 대해서 사용할 수 있게 해줌
-app.use("/api", express.json(), router);
+const app = express();
+
+app.use("/api", express.json(), todosRouter);
+// 정적 파일을 주소 뒤에 입력했을때 확인할 수 있다
+// 예시 : http://localhost:8081/index.html
+// http://localhost:8081/logo192.png
+// express.static 함수는app.js 파일 기준으로, 입력 값(지금은 "./assets") 경로에 있는 파일을 아무런 가공 없이 그대로 전달해주는 미들웨어
+// app.js 파일이 루트 폴더(최상위 폴더)에 있고,
+// 최상위 폴더 아래이쓴 asset폴더 안에 있는 모든 파일을 정적파일 연결하는 express.static을 통해 연결
+app.use(express.static("./assets"));
 
 app.listen(8081, () => {
-    console.log("서버가 켜졌어요!");
-})
+  console.log("서버가 켜졌어요!");
+});
