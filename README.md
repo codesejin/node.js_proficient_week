@@ -71,7 +71,7 @@ npm install 명령어는 패키지를 설치하는 명령어이며, -i는 -insta
 ![image](https://github.com/codesejin/node.js_proficient_week_1_1/assets/101460733/cd205ac6-04a0-4cf9-82e6-a5faea2006dd)
 
 ## back api function
--  todo 등록
+### -  todo 등록
 ```
 // 할일 추가(생성)
 router.post("/todos", async(req, res) => {
@@ -88,7 +88,7 @@ router.post("/todos", async(req, res) => {
       res.send({todo});
 })
 ```
--  todo 조회
+### -  todo 조회
 
 ```
 // 할일 조회
@@ -99,17 +99,10 @@ router.get("/todos", async(req,res) => {
     res.send({todos})
 })
 ```
--  todo 우선순위 변경
+
+### -  todo 우선순위 변경
 
 ```
-// 할일 조회
-router.get("/todos", async(req,res) => {
-    // sort("정렬할 컬럼명") : -를 넣으면 order의 내림차순, 안넣으면 오름차순
-    const todos = await Todo.find().sort("-order").exec();
-    // key와 value값이 다르면 todos:todos 로 적고, 똑같으면 하나
-    res.send({todos})
-})
-
 // 할일 순서 수정
 router.patch("/todos/:todoId", async (req, res) => {
     const {todoId} = req.params;
@@ -122,7 +115,6 @@ router.patch("/todos/:todoId", async (req, res) => {
     if (!currentTodo) {
         return res.status($00).json({"errorMessage" : "존재하지 않는 할 일 입니다."});
     }
-    res.send();
 
     if (order) {
         const targetTodo = await Todo.findOne({order: order}).exec();
@@ -135,10 +127,12 @@ router.patch("/todos/:todoId", async (req, res) => {
         currentTodo.order = order;
         await currentTodo.save();
     }
+    res.send();
 })
-
 ```
--  todo 삭제
+<img width="1090" alt="image" src="https://github.com/codesejin/node.js_proficient_week_1_1/assets/101460733/9adcdaed-1008-47ae-b282-8bcf73032a79">
+
+### -  todo 삭제
 
 ```
 // 할일 삭제
@@ -151,6 +145,53 @@ router.delete("/todos/:todoId", async (req, res) => {
 
 });
 ```
+<img width="1091" alt="image" src="https://github.com/codesejin/node.js_proficient_week_1_1/assets/101460733/af4f7ee0-007f-456f-9620-e07a15ee4405">
+
+### - todo 수정하기 기능 추가 (순서, 메모, 완료여부 각 하나씩 요청 바디에 전송)
+```
+router.patch("/todos/:todoId", async (req, res) => {
+    //클라이언트는 요청 URL의 :todoId 자리에 특정 할 일의 식별자를 전달해야 합니다.
+    //요청 본문에서 order, value, done 세 가지 필드를 받습니다.
+    const {todoId} = req.params;
+    const {order, value, done} = req.body;
+
+    //todoId를 사용하여 해당 식별자에 해당하는 할 일을 MongoDB에서 찾습니다.
+    const currentTodo = await Todo.findById(todoId).exec();
+    //currentTodo가 존재하지 않는 경우, 에러를 발생시킵니다.
+    if (!currentTodo) {
+        throw new Error("존재하지 않는 할 일 입니다.");
+    }
+
+    //order 필드가 제공된 경우:
+    if (order) {
+        // 동일한 order 값을 가진 다른 할 일을 찾습니다.
+        const targetTodo = await Todo.findOne({ order }).exec();
+        // 해당 할 일이 존재하는 경우, 그 할 일의 order 값을 현재 할 일의 order 값으로 설정하고 저장합니다.
+        if (targetTodo) {
+            targetTodo.order = currentTodo.order;
+            await targetTodo.save();
+        }
+        // 현재 할 일의 order 값을 요청에서 받은 값으로 업데이트합니다.
+        currentTodo.order = order;
+    //value 필드가 제공된 경우, 현재 할 일의 value 값을 요청에서 받은 값으로 업데이트합니다.
+    } else if (value) {
+        currentTodo.value = value;
+    //done 필드가 제공된 경우:
+    } else if (done !== undefined) {
+        //done이 true인 경우, 현재 할 일의 doneAt 필드를 현재 시간으로 설정합니다.
+        //done이 false인 경우, 현재 할 일의 doneAt 필드를 null로 설정합니다.
+        currentTodo.doneAt = done ? new Date() : null;
+    }
+    //현재 할 일을 저장합니다.
+    await currentTodo.save();
+    //응답으로 빈 JSON 객체를 보냅니다.
+    res.send({});
+
+});
+```
+<img width="1088" alt="image" src="https://github.com/codesejin/node.js_proficient_week_1_1/assets/101460733/0327426c-6d7f-4ddd-92ee-f9fbb4ca8ecb">
+
+![image](https://github.com/codesejin/node.js_proficient_week_1_1/assets/101460733/45f45840-ffae-4e45-b156-cae503108995)
 
 ## Studio 3T - mongoDB client
 robo3t 설치법 : https://tychejin.tistory.com/353
