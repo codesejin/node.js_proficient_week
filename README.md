@@ -1,5 +1,5 @@
 # node.js_proficient_week_1_1
-node.js 숙련주차 - easy todolist
+node.js 숙련주차 - easy todo list
 
 
 ## front test displiay
