@@ -45,7 +45,8 @@ node.js 숙련주차 - easy todo list
     3. 내가 만든 서버로 "**정적 파일(Static file)**"을 제공할 수 있다.
         
         <aside>
-        💡 **정적 파일?** 말 그대로 "변하지 않는 파일"이라고 생각하면 좋습니다. (["정적"의 사전적 의미](https://ko.wiktionary.org/wiki/%EC%A0%95%EC%A0%81))
+        💡 **정적 파일?** 말 그대로 "변하지 않는 파일"이라고 생각하면 좋습니다.
+        (["정적"의 사전적 의미](https://ko.wiktionary.org/wiki/%EC%A0%95%EC%A0%81))
         서버에서 파일 내용을 변형하여 사용하지 않고, 클라이언트(요청자)에게 그대로 전달하기 위한 목적의 파일입니다.
         
         </aside>
@@ -191,3 +192,6 @@ robo3t 설치법 : https://tychejin.tistory.com/353
 └── package.json
 ```
 
+# MongoDB 설치
+
+https://zzang9ha.tistory.com/361
